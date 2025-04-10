@@ -3,6 +3,7 @@ import 'package:edulingokids/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:edulingokids/questions.dart';
+import 'package:audioplayers/audioplayers.dart'; // Import audioplayers
 
 class QuizPage extends StatefulWidget {
   final int grade;
@@ -28,12 +29,16 @@ class _QuizPageState extends State<QuizPage> {
   bool _isQuizPaused = false;
   late String topicName;
 
+  // Audio player instance
+  late AudioPlayer _audioPlayer;
+
   @override
   void initState() {
     super.initState();
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 2),
     );
+    _audioPlayer = AudioPlayer(); // Initialize audio player
 
     try {
       List<TestTopic> tests;
@@ -114,6 +119,9 @@ class _QuizPageState extends State<QuizPage> {
     if (index == questions[currentQuestion].correctOptionIndex) {
       correctAnswers++;
       _confettiController.play();
+      _playSound('correct.wav'); // Play correct sound
+    } else {
+      _playSound('false.wav'); // Play false sound
     }
 
     Future.delayed(const Duration(seconds: 2), () {
@@ -125,6 +133,11 @@ class _QuizPageState extends State<QuizPage> {
         }
       }
     });
+  }
+
+  // Method to play sound
+  void _playSound(String soundFile) async {
+    await _audioPlayer.play(AssetSource('sounds/$soundFile'));
   }
 
   void _showCorrectAnswer() {
@@ -201,6 +214,7 @@ class _QuizPageState extends State<QuizPage> {
   void dispose() {
     _timer?.cancel();
     _confettiController.dispose();
+    _audioPlayer.dispose(); // Dispose audio player
     super.dispose();
   }
 
