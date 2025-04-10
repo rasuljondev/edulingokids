@@ -8,8 +8,7 @@ class QuizPage extends StatefulWidget {
   final int grade;
   final int testNumber;
 
-  const QuizPage({Key? key, required this.grade, required this.testNumber})
-    : super(key: key);
+  const QuizPage({super.key, required this.grade, required this.testNumber});
 
   @override
   State<QuizPage> createState() => _QuizPageState();
